@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Chart.js Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 0;
+            padding: 0;
+            background-image: url(dark-gradient.jpg);
+            color: white;
+            position: absolute;
+        }
+        .container {
+            width: 45%;
+            margin: 20px;
+            background-color: transparent;
+            box-shadow: 0 4px 8px #181861;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+        }
+        h3{
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 40px;
+        }
+        canvas {
+            display: block;
+        }
+        h1{
+            color: white;
+            background-color: #1e1e2d;
+            height: 2.5rem;
+            box-shadow: 0 4px 8px #181861;
+            border-radius: 10px;
+            background: transparent;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 40px;
+        }
+        .metrices{
+            box-shadow: 0 4px 8px #181861;
+            border-radius: 10px;
+            padding: 5px;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+        #container1{
+            margin-right: 10px;
+            height: 15rem;
+            width: 30rem;
+        }
+        #container2{
+            margin-right: 10px;
+            height: 15rem;
+            width: 30rem;
+        }
+        #container3{
+            height: 15rem;
+            width: 15rem;
+        }
+        #container4{
+            margin-left: 50px;
+            height: 20rem;
+            width: 20rem;
+        }
+        #container5{
+            height: 20rem;
+            width: 35rem;
+        }
+        #container6{
+            margin-right: 50px;
+            height: 20rem;
+            width: 20rem;
+        }
+        #mixcontainer1{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #mixcontainer2{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Madhav Ecommerse Sales Dashboard</h1>
+    </div>
+    <div class="metrices">
+        <h3>438K</h3>
+        <p>Sum of Amount</p>
+    </div>
+    <div class="metrices">
+        <h3>37K</h3>
+        <p>Sum of Profit</p>
+    </div>
+    <div class="metrices">
+        <h3>5615</h3>
+        <p>Sum of Quantity</p>
+    </div>
+    <div class="metrices">
+        <h3>121K</h3>
+        <p>Sum of AOV</p>
+    </div>
+    <div id="mixcontainer1">
+        <div id="container1" class="container">
+            <canvas id="profitBySubCategory"></canvas>
+        </div>
+        <div id="container2" class="container">
+            <canvas id="profitByMonth"></canvas>
+        </div>
+        <div id="container3" class="container">
+            <canvas id="quantityByCategory"></canvas>
+        </div>
+    </div>
+    <div id="mixcontainer2">
+        <div id="container4" class="container">
+            <canvas id="amountByState"></canvas>
+        </div>
+        <div id="container5" class="container">
+            <canvas id="amountByCustomer"></canvas>
+        </div>
+        <div id="container6" class="container">
+             <canvas id="quantityByPaymentMode"></canvas>
+        </div>
+    </div>
+    <script>
+        // Example data
+        const profitBySubCategoryData = {
+            labels: ['Printers', 'Bookcases', 'Saree', 'Accessories', 'Tables'],
+            datasets: [{
+                label: 'Sum of Profit',
+                data: [8.6, 6.5, 4.1, 3.4, 3.1],
+                backgroundColor: ['#007bff', '#ff5722', '#9c27b0', '#e91e63', '#3f51b5'],
+                borderColor: '#2d2f33',
+                borderWidth: 1,
+            }]
+        };
+
+        const profitByMonthData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [{
+                label: 'Profit',
+                data: [3000, 5000, 4000, 7000, 6000, 8000, 7000, 4000, 5000, 6000, 7000, 10000],
+                backgroundColor: '#007bff',
+                borderColor: '#2d2f33',
+                borderWidth: 1,
+            }]
+        };
+
+        const quantityByCategoryData = {
+            labels: ['Furniture', 'Electronics', 'Clothing'],
+            datasets: [{
+                label: 'Quantity',
+                data: [16.83, 20.55, 62.62],
+                backgroundColor: ['#ff5722', '#9c27b0', '#3f51b5'],
+                borderColor: '#2d2f33',
+                borderWidth: 1,
+            }]
+        };
+
+        const amountByStateData = {
+            labels: ['Maharashtra', 'Madhya Pradesh', 'Uttar Pradesh', 'Delhi', 'Rajasthan'],
+            datasets: [{
+                label: 'Sum of Amount',
+                data: [0.1, 0.09, 0.08, 0.07, 0.06],
+                backgroundColor: ['#007bff','#9c27b0','#ff5722','#3f51b5','#e91e63'],
+                borderColor: '#2d2f33',
+                borderWidth: 1,
+            }]
+        };
+
+        const amountByCustomerData = {
+            labels: ['Harivansh', 'Madhav', 'Madan Mohan', 'Shiva', 'Vishakha'],
+            datasets: [{
+                label: 'Sum of Amount',
+                data: [9.9, 9.4, 7.8, 6.3, 6.1],
+                backgroundColor: ['#007bff', '#ff5722', '#9c27b0', '#e91e63', '#3f51b5'],
+                borderColor: '#2d2f33',
+                borderWidth: 1,
+            }]
+        };
+
+        const quantityByPaymentModeData = {
+            labels: ['EMI', 'Credit Card', 'Debit Card', 'UPI', 'COD'],
+            datasets: [{
+                label: 'Quantity',
+                data: [10.49, 11.97, 13.2, 20.61, 43.74],
+                backgroundColor: ['#ff5722', '#9c27b0', '#3f51b5', '#e91e63', '#007bff'],
+                borderColor: '#2d2f33',
+                borderWidth: 1,
+            }]
+        };
+
+        // Chart configuration
+        const profitBySubCategoryConfig = {
+            type: 'bar',
+            data: profitBySubCategoryData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        color: 'white',
+                    },
+                    x: {
+                        color: 'white',
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sum of Profit by Sub-Category',
+                        color: 'white',
+                    }
+                }
+            }
+        };
+
+        const profitByMonthConfig = {
+            type: 'bar',
+            data: profitByMonthData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        color: 'white',
+                    },
+                    x: {
+                        color: 'white',
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Profit by Month',
+                        color: 'white',
+                    }
+                }
+            }
+        };
+
+        const quantityByCategoryConfig = {
+            type: 'pie',
+            data: quantityByCategoryData,
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sum of Quantity by Category',
+                        color: 'white',
+                    }
+                }
+            }
+        };
+
+        const amountByStateConfig = {
+            type: 'doughnut',
+            data: amountByStateData,
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sum of Amount by State',
+                        color: 'white',
+                    }
+                }
+            }
+        };
+
+        const amountByCustomerConfig = {
+            type: 'bar',
+            data: amountByCustomerData,
+            options: {
+              indexAxis: 'y',
+              elements: {
+                bar: {
+                  borderWidth: 2,
+                }
+              },
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'right'
+                },
+                title: {
+                  display: true,
+                  text: 'Sum of Amount by Customer Name',
+                  color: 'white'
+                }
+              }
+            }
+          };
+
+          const quantityByPaymentModeConfig = {
+            type: 'pie',
+            data: quantityByPaymentModeData,
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white',
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sum of Quantity by PaymentMode',
+                        color: 'white',
+                    }
+                }
+            }
+        };
+          
+        const myChart1 = new Chart(
+            document.getElementById('profitBySubCategory'),
+            profitBySubCategoryConfig
+        );
+
+        const myChart2 = new Chart(
+            document.getElementById('profitByMonth'),
+            profitByMonthConfig
+        );
+
+        const myChart3 = new Chart(
+            document.getElementById('quantityByCategory'),
+            quantityByCategoryConfig
+        );
+        const myChart4 = new Chart(
+            document.getElementById('amountByState'),
+            amountByStateConfig
+        ); 
+        const myChart5 = new Chart(
+                document.getElementById('amountByCustomer'),
+                amountByCustomerConfig 
+        );  
+        const myChart6 = new Chart(
+            document.getElementById('quantityByPaymentMode'),
+            quantityByPaymentModeConfig
+        ); 
+    </script>
+</body>
+</html>
