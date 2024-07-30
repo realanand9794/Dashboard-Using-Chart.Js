@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madhav Ecommerse Sales Dashboard</title>
+    <title>Advanced Chart.js Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Include Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Include Turf.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf/turf.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,7 +24,7 @@
         }
         .container {
             width: 45%;
-            margin: 20px;
+            margin-top: 30px;
             background-color: transparent;
             box-shadow: 0 4px 8px #181861;
             border-radius: 10px;
@@ -41,9 +46,9 @@
             box-shadow: 0 4px 8px #181861;
             border-radius: 10px;
             background: transparent;
-            margin-top: 40px;
+            margin-top: 50px;
             padding: 20px;
-            font-size: 40px;
+            font-size: 45px;
         }
         .metrices{
             box-shadow: 0 4px 8px #181861;
@@ -53,42 +58,51 @@
             margin-right: 20px;
         }
         #container1{
-            margin-right: 10px;
-            height: 15rem;
-            width: 30rem;
-        }
-        #container2{
-            margin-right: 10px;
-            height: 15rem;
-            width: 30rem;
-        }
-        #container3{
-            height: 15rem;
-            width: 15rem;
-        }
-        #container4{
-            margin-left: 50px;
-            height: 20rem;
-            width: 20rem;
-        }
-        #container5{
+            margin-right: 25px;
             height: 20rem;
             width: 35rem;
         }
-        #container6{
-            margin-right: 50px;
+        #container2{
+            margin-right: 2px;
+            height: 20rem;
+            width: 35rem;
+        }
+        #container3{
+            margin-left: 25px;
             height: 20rem;
             width: 20rem;
+        }
+        #container4{
+            margin-right: 25px;
+            height: 25rem;
+            width: 25rem;
+        }
+        #container5{
+            height: 25rem;
+            width: 40rem;
+        }
+        #container6{
+            margin-left: 25px;
+            height: 25rem;
+            width: 25rem;
         }
         #mixcontainer1{
             display: flex;
             align-items: center;
             justify-content: center;
+            justify-content: space-evenly;
         }
         #mixcontainer2{
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+            margin: 30px;
+            box-shadow: 0 4px 8px #181861;
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -134,6 +148,7 @@
              <canvas id="quantityByPaymentMode"></canvas>
         </div>
     </div>
+    <div id="map"></div>
     <script>
         // Example data
         const profitBySubCategoryData = {
@@ -366,6 +381,61 @@
             document.getElementById('quantityByPaymentMode'),
             quantityByPaymentModeConfig
         ); 
+
+        //TURF.JS
+
+        const map = L.map('map').setView([22.9734, 78.6569], 5); // Centered over India
+
+// Add a tile layer to the map
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+// Amount data for each state (mock data for demonstration)
+const amountData = {
+    "Maharashtra": 30,
+    "Madhya Pradesh": 25,
+    "Uttar Pradesh": 40,
+    "Delhi": 35,
+    "Rajasthan": 20
+};
+
+// Coordinates for each state (approximate)
+const stateCoordinates = {
+    "Maharashtra": [19.7515, 75.7139],
+    "Madhya Pradesh": [22.9734, 78.6569],
+    "Uttar Pradesh": [26.8467, 80.9462],
+    "Delhi": [28.7041, 77.1025],
+    "Rajasthan": [27.0238, 74.2179]
+};
+
+// Colors for each state
+const stateColors = {
+    "Maharashtra": 'blue',
+    "Madhya Pradesh": 'purple',
+    "Uttar Pradesh": 'orange',
+    "Delhi": 'pink',
+    "Rajasthan": 'violet'
+};
+
+// Add bubbles for each state
+for (const [state, amount] of Object.entries(amountData)) {
+    // Define the radius based on amount data
+    const radius = amount * 3000; // Scale the amount value for visualization
+
+    // Create a circle (bubble) for each state without a border
+    const circle = L.circle(stateCoordinates[state], {
+        color: 'transparent', // Set the circle outline color to transparent
+        fillColor: stateColors[state], // Set the circle fill color
+        fillOpacity: 0.7, // Set the fill opacity
+        radius: radius    // Set the radius scaled by amount
+    }).addTo(map);
+
+    // Bind a popup to each circle
+    circle.bindPopup(`<b>${state}</b><br>Sum of Amount: ${amount}`);
+
+}
     </script>
 </body>
-</html>
+</html> 
