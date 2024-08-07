@@ -55,6 +55,13 @@
             box-shadow: 0 4px 8px #181861;
             border-radius: 10px;
         }
+        h4{
+            box-shadow: 0 4px 8px #181861;
+            border-radius: 10px;
+            display: inline;
+            padding: 1rem;
+            margin-left: 115px;
+        }
         .metrices{
             box-shadow: 0 4px 8px #181861;
             border-radius: 10px;
@@ -114,21 +121,34 @@
 <body>
     <div>
         <h1>Madhav Ecommerse Sales Dashboard</h1>
+        <!-- Dropdown for filtering by state -->
+    <div>
+        <h4>States
+            <select id="stateFilter">
+                <option value="All">All States</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Rajasthan">Rajasthan</option>
+            </select>
+        </h4>
+    </div>
     </div>
     <div class="metrices">
-        <h3>438K</h3>
+        <h3 id="sumAmount">438K</h3>
         <p>Sum of Amount</p>
     </div>
     <div class="metrices">
-        <h3>37K</h3>
+        <h3 id="sumProfit">37K</h3>
         <p>Sum of Profit</p>
     </div>
     <div class="metrices">
-        <h3>5615</h3>
+        <h3 id="sumQuantity">5615</h3>
         <p>Sum of Quantity</p>
     </div>
     <div class="metrices">
-        <h3>121K</h3>
+        <h3 id="sumAOV">121K</h3>
         <p>Sum of AOV</p>
     </div>
     <div id="mixcontainer1">
@@ -157,78 +177,97 @@
         <h2>Amount By State In Percentage(%) By Using Map</h2>
     </div>
     <div id="map"></div>
+    
     <script>
         // Example data
-        const profitBySubCategoryData = {
-            labels: ['Printers', 'Bookcases', 'Saree', 'Accessories', 'Tables'],
-            datasets: [{
-                label: 'Sum of Profit',
-                data: [8.6, 6.5, 4.1, 3.4, 3.1],
-                backgroundColor: ['#007bff', '#ff5722', '#9c27b0', '#e91e63', '#3f51b5'],
-                borderColor: '#2d2f33',
-                borderWidth: 1,
-            }]
-        };
-
-        const profitByMonthData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            datasets: [{
-                label: 'Profit',
-                data: [3000, 5000, 4000, 7000, 6000, 8000, 7000, 4000, 5000, 6000, 7000, 10000],
-                backgroundColor: '#007bff',
-                borderColor: '#2d2f33',
-                borderWidth: 1,
-            }]
-        };
-
-        const quantityByCategoryData = {
-            labels: ['Furniture', 'Electronics', 'Clothing'],
-            datasets: [{
-                label: 'Quantity',
-                data: [16.83, 20.55, 62.62],
-                backgroundColor: ['#ff5722', '#9c27b0', '#3f51b5'],
-                borderColor: '#2d2f33',
-                borderWidth: 1,
-            }]
-        };
-
-        const amountByStateData = {
-            labels: ['Maharashtra', 'Madhya Pradesh', 'Uttar Pradesh', 'Delhi', 'Rajasthan'],
-            datasets: [{
-                label: 'Sum of Amount',
-                data: [0.1, 0.09, 0.08, 0.07, 0.06],
-                backgroundColor: ['#007bff','#9c27b0','#ff5722','#3f51b5','#e91e63'],
-                borderColor: '#2d2f33',
-                borderWidth: 1,
-            }]
-        };
-
-        const amountByCustomerData = {
-            labels: ['Harivansh', 'Madhav', 'Madan Mohan', 'Shiva', 'Vishakha'],
-            datasets: [{
-                label: 'Sum of Amount',
-                data: [9.9, 9.4, 7.8, 6.3, 6.1],
-                backgroundColor: ['#007bff', '#ff5722', '#9c27b0', '#e91e63', '#3f51b5'],
-                borderColor: '#2d2f33',
-                borderWidth: 1,
-            }]
-        };
-
-        const quantityByPaymentModeData = {
-            labels: ['EMI', 'Credit Card', 'Debit Card', 'UPI', 'COD'],
-            datasets: [{
-                label: 'Quantity',
-                data: [10.49, 11.97, 13.2, 20.61, 43.74],
-                backgroundColor: ['#ff5722', '#9c27b0', '#3f51b5', '#e91e63', '#007bff'],
-                borderColor: '#2d2f33',
-                borderWidth: 1,
-            }]
+        const data = {
+            "Maharashtra": {
+                profitBySubCategory: [8.6, 6.5, 4.1, 3.4, 3.1],
+                profitByMonth: [3000, 5000, 4000, 7000, 6000, 8000, 7000, 4000, 5000, 6000, 7000, 10000],
+                quantityByCategory: [16.83, 20.55, 62.62],
+                amountByState: [0.1, 0.09, 0.08, 0.07, 0.06],
+                amountByCustomer: [9.9, 9.4, 7.8, 6.3, 6.1],
+                quantityByPaymentMode: [10.49, 11.97, 13.2, 20.61, 43.74],
+                sumAmount: '100K',
+                sumProfit: '10K',
+                sumQuantity: '1000',
+                sumAOV: '10K'
+            },
+            "Madhya Pradesh": {
+                profitBySubCategory: [6.6, 5.5, 3.1, 2.4, 1.1],
+                profitByMonth: [2000, 3000, 3000, 6000, 4000, 7000, 5000, 3000, 4000, 5000, 6000, 9000],
+                quantityByCategory: [10.83, 15.55, 50.62],
+                amountByState: [0.09, 0.08, 0.07, 0.06, 0.05],
+                amountByCustomer: [8.9, 8.4, 6.8, 5.3, 5.1],
+                quantityByPaymentMode: [9.49, 10.97, 12.2, 18.61, 40.74],
+                sumAmount: '90K',
+                sumProfit: '9K',
+                sumQuantity: '900',
+                sumAOV: '9K'
+            },
+            "Uttar Pradesh": {
+                profitBySubCategory: [7.6, 6.0, 4.5, 3.0, 2.5],
+                profitByMonth: [2500, 4000, 3500, 6500, 4500, 7500, 6000, 3500, 4500, 5500, 6500, 9500],
+                quantityByCategory: [14.83, 18.55, 60.62],
+                amountByState: [0.08, 0.07, 0.06, 0.05, 0.04],
+                amountByCustomer: [9.0, 8.5, 7.0, 6.5, 6.0],
+                quantityByPaymentMode: [11.49, 12.97, 14.2, 21.61, 45.74],
+                sumAmount: '80K',
+                sumProfit: '8K',
+                sumQuantity: '800',
+                sumAOV: '8K'
+            },
+            "Delhi": {
+                profitBySubCategory: [8.1, 6.4, 4.2, 3.5, 3.0],
+                profitByMonth: [2800, 4800, 3800, 6800, 4800, 7800, 6800, 3800, 4800, 5800, 6800, 9800],
+                quantityByCategory: [16.83, 20.55, 62.62],
+                amountByState: [0.07, 0.06, 0.05, 0.04, 0.03],
+                amountByCustomer: [9.8, 9.3, 7.7, 6.2, 6.0],
+                quantityByPaymentMode: [10.49, 11.97, 13.2, 20.61, 43.74],
+                sumAmount: '70K',
+                sumProfit: '7K',
+                sumQuantity: '700',
+                sumAOV: '7K'
+            },
+            "Rajasthan": {
+                profitBySubCategory: [7.8, 5.9, 4.0, 2.8, 2.6],
+                profitByMonth: [2600, 4600, 3600, 6600, 4600, 7600, 6600, 3600, 4600, 5600, 6600, 9600],
+                quantityByCategory: [15.83, 19.55, 61.62],
+                amountByState: [0.06, 0.05, 0.04, 0.03, 0.02],
+                amountByCustomer: [8.0, 7.5, 6.5, 5.5, 5.0],
+                quantityByPaymentMode: [11.49, 12.97, 14.2, 21.61, 45.74],
+                sumAmount: '60K',
+                sumProfit: '6K',
+                sumQuantity: '600',
+                sumAOV: '6K'
+            },
+            All: {
+                profitBySubCategory: [6.6, 9.5, 4.1, 7.4, 6.1],
+                profitByMonth: [9000, 1000, 6000, 7000, 9000, 8000, 4000, 2000, 7000, 8000, 4000, 20000],
+                quantityByCategory: [29.83, 21.55, 39.62],
+                amountByState: [0.8, 0.06, 0.03, 0.05, 0.09],
+                amountByCustomer: [3.9, 7.4, 9.8, 5.3, 3.1],
+                quantityByPaymentMode: [15.49, 12.97, 19.2, 10.61, 38.74],
+                sumAmount: '438K',
+                sumProfit: '37K',
+                sumQuantity: '5615',
+                sumAOV: '121K'
+            }
         };
 
         // Chart configuration
         const profitBySubCategoryConfig = {
             type: 'bar',
-            data: profitBySubCategoryData,
+            data: {
+                labels: ['Printers', 'Bookcases', 'Saree', 'Accessories', 'Tables'],
+                datasets: [{
+                    label: 'Sum of Profit',
+                    data: data.All.profitBySubCategory,
+                    backgroundColor: ['#007bff', '#ff5722', '#9c27b0', '#e91e63', '#3f51b5'],
+                    borderColor: '#2d2f33',
+                    borderWidth: 1,
+                }]
+            },
             options: {
                 scales: {
                     y: {
@@ -256,7 +295,16 @@
 
         const profitByMonthConfig = {
             type: 'bar',
-            data: profitByMonthData,
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                datasets: [{
+                    label: 'Profit',
+                    data: data.All.profitByMonth,
+                    backgroundColor: '#007bff',
+                    borderColor: '#2d2f33',
+                    borderWidth: 1,
+                }]
+            },
             options: {
                 scales: {
                     y: {
@@ -284,7 +332,16 @@
 
         const quantityByCategoryConfig = {
             type: 'pie',
-            data: quantityByCategoryData,
+            data: {
+                labels: ['Furniture', 'Electronics', 'Clothing'],
+                datasets: [{
+                    label: 'Quantity',
+                    data: data.All.quantityByCategory,
+                    backgroundColor: ['#ff5722', '#9c27b0', '#3f51b5'],
+                    borderColor: '#2d2f33',
+                    borderWidth: 1,
+                }]
+            },
             options: {
                 plugins: {
                     legend: {
@@ -303,7 +360,16 @@
 
         const amountByStateConfig = {
             type: 'doughnut',
-            data: amountByStateData,
+            data: {
+                labels: ['Maharashtra', 'Madhya Pradesh', 'Uttar Pradesh', 'Delhi', 'Rajasthan'],
+                datasets: [{
+                    label: 'Sum of Amount',
+                    data: data.All.amountByState,
+                    backgroundColor: ['#007bff','#9c27b0','#ff5722','#3f51b5','#e91e63'],
+                    borderColor: '#2d2f33',
+                    borderWidth: 1,
+                }]
+            },
             options: {
                 plugins: {
                     legend: {
@@ -322,7 +388,16 @@
 
         const amountByCustomerConfig = {
             type: 'bar',
-            data: amountByCustomerData,
+            data: {
+                labels: ['Harivansh', 'Madhav', 'Madan Mohan', 'Shiva', 'Vishakha'],
+                datasets: [{
+                    label: 'Sum of Amount',
+                    data: data.All.amountByCustomer,
+                    backgroundColor: ['#007bff', '#ff5722', '#9c27b0', '#e91e63', '#3f51b5'],
+                    borderColor: '#2d2f33',
+                    borderWidth: 1,
+                }]
+            },
             options: {
               indexAxis: 'y',
               elements: {
@@ -346,7 +421,16 @@
 
           const quantityByPaymentModeConfig = {
             type: 'pie',
-            data: quantityByPaymentModeData,
+            data: {
+                labels: ['EMI', 'Credit Card', 'Debit Card', 'UPI', 'COD'],
+                datasets: [{
+                    label: 'Quantity',
+                    data: data.All.quantityByPaymentMode,
+                    backgroundColor: ['#ff5722', '#9c27b0', '#3f51b5', '#e91e63', '#007bff'],
+                    borderColor: '#2d2f33',
+                    borderWidth: 1,
+                }]
+            },
             options: {
                 plugins: {
                     legend: {
@@ -390,60 +474,88 @@
             quantityByPaymentModeConfig
         ); 
 
+        function updateCharts(state) {
+            const stateData = data[state] || data.All;
+            
+            myChart1.data.datasets[0].data = stateData.profitBySubCategory;
+            myChart2.data.datasets[0].data = stateData.profitByMonth;
+            myChart3.data.datasets[0].data = stateData.quantityByCategory;
+            myChart4.data.datasets[0].data = stateData.amountByState;
+            myChart5.data.datasets[0].data = stateData.amountByCustomer;
+            myChart6.data.datasets[0].data = stateData.quantityByPaymentMode;
+
+            myChart1.update();
+            myChart2.update();
+            myChart3.update();
+            myChart4.update();
+            myChart5.update();
+            myChart6.update();
+
+            document.getElementById('sumAmount').innerText = stateData.sumAmount;
+            document.getElementById('sumProfit').innerText = stateData.sumProfit;
+            document.getElementById('sumQuantity').innerText = stateData.sumQuantity;
+            document.getElementById('sumAOV').innerText = stateData.sumAOV;
+        }
+
         //TURF.JS
 
         const map = L.map('map').setView([22.9734, 78.6569], 5); // Centered over India
 
-// Add a tile layer to the map
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
+        // Add a tile layer to the map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-// Amount data for each state (mock data for demonstration)
-const amountData = {
-    "Maharashtra": 30,
-    "Madhya Pradesh": 25,
-    "Uttar Pradesh": 40,
-    "Delhi": 35,
-    "Rajasthan": 20
-};
+        // Amount data for each state (mock data for demonstration)
+        const amountData = {
+            "Maharashtra": 30,
+            "Madhya Pradesh": 25,
+            "Uttar Pradesh": 40,
+            "Delhi": 35,
+            "Rajasthan": 20
+        };
 
-// Coordinates for each state (approximate)
-const stateCoordinates = {
-    "Maharashtra": [19.7515, 75.7139],
-    "Madhya Pradesh": [22.9734, 78.6569],
-    "Uttar Pradesh": [26.8467, 80.9462],
-    "Delhi": [28.7041, 77.1025],
-    "Rajasthan": [27.0238, 74.2179]
-};
+        // Coordinates for each state (approximate)
+        const stateCoordinates = {
+            "Maharashtra": [19.7515, 75.7139],
+            "Madhya Pradesh": [22.9734, 78.6569],
+            "Uttar Pradesh": [26.8467, 80.9462],
+            "Delhi": [28.7041, 77.1025],
+            "Rajasthan": [27.0238, 74.2179]
+        };
 
-// Colors for each state
-const stateColors = {
-    "Maharashtra": 'blue',
-    "Madhya Pradesh": 'purple',
-    "Uttar Pradesh": 'orange',
-    "Delhi": 'pink',
-    "Rajasthan": 'violet'
-};
+        // Colors for each state
+        const stateColors = {
+            "Maharashtra": 'blue',
+            "Madhya Pradesh": 'purple',
+            "Uttar Pradesh": 'orange',
+            "Delhi": 'pink',
+            "Rajasthan": 'violet'
+        };
 
-// Add bubbles for each state
-for (const [state, amount] of Object.entries(amountData)) {
-    // Define the radius based on amount data
-    const radius = amount * 3000; // Scale the amount value for visualization
+        // Add bubbles for each state
+        for (const [state, amount] of Object.entries(amountData)) {
+            // Define the radius based on amount data
+            const radius = amount * 3000; // Scale the amount value for visualization
 
-    // Create a circle (bubble) for each state without a border
-    const circle = L.circle(stateCoordinates[state], {
-        color: 'transparent', // Set the circle outline color to transparent
-        fillColor: stateColors[state], // Set the circle fill color
-        fillOpacity: 0.7, // Set the fill opacity
-        radius: radius    // Set the radius scaled by amount
-    }).addTo(map);
+            // Create a circle (bubble) for each state without a border
+            const circle = L.circle(stateCoordinates[state], {
+                color: 'transparent', // Set the circle outline color to transparent
+                fillColor: stateColors[state], // Set the circle fill color
+                fillOpacity: 0.7, // Set the fill opacity
+                radius: radius    // Set the radius scaled by amount
+            }).addTo(map);
 
-    // Bind a popup to each circle
-    circle.bindPopup(`<b>${state}</b><br>Sum of Amount: ${amount}`);
+            // Bind a popup to each circle
+            circle.bindPopup(`<b>${state}</b><br>Sum of Amount: ${amount}`).on('click', function() {
+                updateCharts(state);
+            });
+        }
 
-}
+        document.getElementById('stateFilter').addEventListener('change', function(event) {
+            updateCharts(event.target.value);
+        });
     </script>
 </body>
-</html> 
+</html>
